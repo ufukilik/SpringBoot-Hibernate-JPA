@@ -3,8 +3,10 @@ package com.javacourse.project.hibernateAndJpa.restApi;
 import com.javacourse.project.hibernateAndJpa.Business.ICityService;
 import com.javacourse.project.hibernateAndJpa.Entities.City;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -19,27 +21,29 @@ public class CityController {
     }
 
     @GetMapping("/cities")
-    public List<City> getAll(){
-        return this.cityService.getAll();
-    }
+    public ResponseEntity<List<City>> getAll(){ return ResponseEntity.ok(this.cityService.getAll()); }
 
     @PostMapping("/add")
-    public void add(@RequestBody City city){
-        this.cityService.add(city);
+    public ResponseEntity add(@RequestBody City city){
+        int id = this.cityService.add(city);
+        URI location = URI.create(String.format("/api/%d", id));
+        return ResponseEntity.created(location).build();
     }
 
-    @PostMapping("/update")
-    public void update(@RequestBody City city){
+    @PatchMapping("/update")
+    public ResponseEntity update(@RequestBody City city){
         this.cityService.update(city);
+        return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/delete")
-    public void delete(@RequestBody City city){
+    @DeleteMapping("/delete")
+    public ResponseEntity delete(@RequestBody City city){
         this.cityService.delete(city);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/cities/{id}")
-    public City getById(@PathVariable int id){
-        return this.cityService.getById(id);
+    public ResponseEntity<City> getById(@PathVariable int id){
+        return ResponseEntity.ok(this.cityService.getById(id));
     }
 }

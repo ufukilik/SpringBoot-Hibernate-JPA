@@ -26,8 +26,9 @@ public class CityManager implements ICityService {
 
     @Override
     @Transactional
-    public void add(City city) {
+    public Integer add(City city) {
         this.cityDal.add(city);
+        return city.getId();
     }
 
     @Override
